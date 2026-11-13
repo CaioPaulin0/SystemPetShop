@@ -1,5 +1,5 @@
 # SystemPetShop
-
+<a href="https://github.com/CaioPaulin0/SystemPetShopFrontend">Link do repositório do frontend</a> </br>
 API REST para cadastrar distribuidores, marcas e produtos de um pet shop, acompanhar lotes e vencimentos e consultar métricas de compra e venda. O backend usa Java 21, Spring Boot, MySQL e Apache Kafka. A leitura de rótulos por imagem usa Spring AI e OpenAI.
 
 [Instalação local](#instalação-local) · [Fluxo do projeto](#fluxo-do-projeto) · [Primeiro cadastro](#primeiro-cadastro) · [Endpoints](#endpoints)
