@@ -53,7 +53,7 @@ public class MetricsDbConfig {
         );
 
         factory.setJpaPropertyMap(Map.of(
-                "hibernate.hbm2ddl.auto", "validate",
+                "hibernate.hbm2ddl.auto", "update",
                 "hibernate.physical_naming_strategy",
                 "org.hibernate.boot.model.naming.PhysicalNamingStrategySnakeCaseImpl"
         ));

@@ -41,7 +41,7 @@ class ExpiredTest {
 
     @Test void deveListarProdutosPorValidadePreservandoIdentidadeEDados() {
         UUID outroId = UUID.fromString("00000000-0000-0000-0000-000000000004");
-        when(repository.findAllExpiredProduct(PageRequest.of(0, 6))).thenReturn(List.of(produto(ID, true), produto(outroId, false)));
+        when(repository.findAllExpiredProduct(PageRequest.of(0, 8))).thenReturn(List.of(produto(ID, true), produto(outroId, false)));
         var result = findAllDue.execute(0);
         assertEquals(List.of(ID, outroId), result.stream().map(p -> p.idProduct()).toList());
         for (var item : result) {
@@ -58,19 +58,19 @@ class ExpiredTest {
                     () -> assertEquals(20, item.stockProduct())
             );
         }
-        verify(repository).findAllExpiredProduct(PageRequest.of(0, 6));
+        verify(repository).findAllExpiredProduct(PageRequest.of(0, 8));
         verifyNoInteractions(producer);
     }
 
     @Test void deveRetornarListaVaziaQuandoNaoHaProdutosPorValidade() {
-        when(repository.findAllExpiredProduct(PageRequest.of(0, 6))).thenReturn(List.of());
+        when(repository.findAllExpiredProduct(PageRequest.of(0, 8))).thenReturn(List.of());
         assertEquals(List.of(), findAllDue.execute(0));
-        verify(repository).findAllExpiredProduct(PageRequest.of(0, 6));
+        verify(repository).findAllExpiredProduct(PageRequest.of(0, 8));
     }
 
     @Test void devePropagarFalhaAoListarProdutosPorValidade() {
         var falha = new RuntimeException("Falha ao consultar validade");
-        when(repository.findAllExpiredProduct(PageRequest.of(0, 6))).thenThrow(falha);
+        when(repository.findAllExpiredProduct(PageRequest.of(0, 8))).thenThrow(falha);
         assertSame(falha, assertThrows(RuntimeException.class, () -> findAllDue.execute(0)));
     }
 

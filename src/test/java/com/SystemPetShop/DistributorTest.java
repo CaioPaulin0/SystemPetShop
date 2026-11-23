@@ -180,38 +180,38 @@ class DistributorTest {
     @Test
     void deveListarDistribuidoresConvertendoTodosOsDados() throws Exception {
         UUID outroId = UUID.fromString("00000000-0000-0000-0000-000000000002");
-        when(repository.findAllDistributor( PageRequest.of(1,5))).thenReturn(List.of(
+        when(repository.findAllDistributor(PageRequest.of(1, 6))).thenReturn(List.of(
                 distribuidor(ID, "Pet Distribuidora"), distribuidor(outroId, "Outra distribuidora")));
 
-//        assertEquals(List.of(output(ID, "Pet Distribuidora"), output(outroId, "Outra distribuidora")),
-//                findAll.execute(1);
+        assertEquals(List.of(output(ID, "Pet Distribuidora"), output(outroId, "Outra distribuidora")),
+                findAll.execute(1));
 
-        verify(repository).findAllDistributor( PageRequest.of(1,5));
+        verify(repository).findAllDistributor(PageRequest.of(1, 6));
         verifyNoMoreInteractions(repository);
     }
 
     @Test
     void deveRejeitarListagemVaziaDeDistribuidores() {
-        when(repository.findAllDistributor(PageRequest.of(1,5))).thenReturn(List.of());
+        when(repository.findAllDistributor(PageRequest.of(1, 6))).thenReturn(List.of());
 
         Exception falha = assertThrows(Exception.class, () -> findAll.execute(1));
 
         assertEquals("list was empty", falha.getMessage());
-        verify(repository).findAllDistributor(PageRequest.of(1,5));
+        verify(repository).findAllDistributor(PageRequest.of(1, 6));
     }
 
     @Test
     void devePropagarFalhaAoListarDistribuidores() {
         RuntimeException falha = new RuntimeException("Falha ao listar");
-        when(repository.findAllDistributor( PageRequest.of(1,5))).thenThrow(falha);
+        when(repository.findAllDistributor(PageRequest.of(1, 6))).thenThrow(falha);
 
         assertSame(falha, assertThrows(RuntimeException.class, () -> findAll.execute(1)));
-        verify(repository).findAllDistributor( PageRequest.of(1,5));
+        verify(repository).findAllDistributor(PageRequest.of(1, 6));
     }
 
     @Test
     void deveListarPaginaDeDistribuidoresParaMetricas() throws Exception {
-        var pagina = PageRequest.of(1, 6);
+        var pagina = PageRequest.of(1, 9);
         when(repository.findAllDistributorMetrics(pagina)).thenReturn(List.of(distribuidor(ID, "Pet Distribuidora")));
 
         assertEquals(List.of(output(ID, "Pet Distribuidora")), findAll.executeMetrics(1));

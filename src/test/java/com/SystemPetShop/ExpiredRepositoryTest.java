@@ -66,7 +66,7 @@ class ExpiredRepositoryTest {
                 product("Sem distribuidor", brandId, UUID.randomUUID(), true),
                 product("Sem ambos", UUID.randomUUID(), UUID.randomUUID(), true));
 
-        var result = repository.findAllExpiredProduct(PageRequest.of(0, 6));
+        var result = repository.findAllExpiredProduct(PageRequest.of(0, 8));
         assertThat(result).hasSize(3);
         assertThat(result).filteredOn(p -> p.getNameProduct().equals("Sem marca"))
                 .singleElement().satisfies(p -> {
@@ -86,9 +86,20 @@ class ExpiredRepositoryTest {
     }
 
     @Test
-    void deveRetornarListaVaziaQuandoNaoHaProdutosHabilitados() {
-        persist(product("Produto ativo", UUID.randomUUID(), UUID.randomUUID(), false));
-        assertThat(repository.findAllExpiredProduct(PageRequest.of(0, 6))).isEmpty();
+    void deveListarProdutoMesmoQuandoDesabilitado() {
+        var product = product("Produto desabilitado", UUID.randomUUID(), UUID.randomUUID(), false);
+        persist(product);
+
+        assertThat(repository.findAllExpiredProduct(PageRequest.of(0, 8)))
+                .singleElement().satisfies(result -> {
+                    assertThat(result.getIdProduct()).isEqualTo(product.getIdProduct());
+                    assertThat(result.isProductEnableDue()).isFalse();
+                });
+    }
+
+    @Test
+    void deveRetornarListaVaziaQuandoNaoHaProdutos() {
+        assertThat(repository.findAllExpiredProduct(PageRequest.of(0, 8))).isEmpty();
     }
 
     @Test
@@ -144,13 +155,15 @@ class ExpiredRepositoryTest {
                 product("Produto 4", brandId, distributorId, true),
                 product("Produto 5", brandId, distributorId, true),
                 product("Produto 6", brandId, distributorId, true),
-                product("Produto 7", brandId, distributorId, true));
+                product("Produto 7", brandId, distributorId, true),
+                product("Produto 8", brandId, distributorId, true),
+                product("Produto 9", brandId, distributorId, true));
 
         var useCase = new ExpiredFindAllUseCase(repository);
         var primeiraPagina = useCase.execute(0);
         var segundaPagina = useCase.execute(1);
 
-        assertThat(primeiraPagina).hasSize(6);
+        assertThat(primeiraPagina).hasSize(8);
         assertThat(segundaPagina).hasSize(1);
         assertThat(primeiraPagina.stream().map(p -> p.idProduct()).toList())
                 .doesNotContain(segundaPagina.getFirst().idProduct());
